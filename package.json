@@ -1,0 +1,26 @@
+{
+  "name": "back-end-lab2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tytianiuk/Back-end-Lab2.git"
+  },
+  "author": "Tytianiuk Artem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tytianiuk/Back-end-Lab2/issues"
+  },
+  "homepage": "https://github.com/tytianiuk/Back-end-Lab2#readme",
+  "description": "",
+  "dependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "devDependencies": {
+    "express": "^4.21.1"
+  }
+}
