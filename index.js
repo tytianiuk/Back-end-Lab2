@@ -2,13 +2,14 @@ import express from 'express';
 import userRoutes from './routes/userRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import recordRoutes from './routes/recordRoutes.js';
+import { getAllUsers } from './controllers/userController.js';
 
 const server = express();
 const PORT = 3000;
 
 server.use(express.json());
 
-server.use('/user', userRoutes);
+server.use('/user', userRoutes).get('/users', getAllUsers);
 server.use('/category', categoryRoutes);
 server.use('/record', recordRoutes);
 
