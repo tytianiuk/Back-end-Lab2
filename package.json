@@ -1,6 +1,6 @@
 {
-  "name": "back-end-lab2",
-  "version": "1.0.0",
+  "name": "back-end-lab3",
+  "version": "3.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -19,6 +19,9 @@
   "homepage": "https://github.com/tytianiuk/Back-end-Lab2#readme",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.7",
+    "express-validator": "^7.2.0",
+    "mongoose": "^8.9.1",
     "nodemon": "^3.1.7"
   },
   "devDependencies": {

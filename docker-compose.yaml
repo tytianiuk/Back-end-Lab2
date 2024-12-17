@@ -10,3 +10,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    environment:
+      - MONGODB_URI=mongodb+srv://tytianiuk:tytianiuk@lab3.r7qna.mongodb.net/?retryWrites=true&w=majority&appName=lab3
+    restart: always
