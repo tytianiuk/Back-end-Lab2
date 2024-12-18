@@ -1,42 +1,71 @@
-import { data } from '../data.js';
+import { handleError } from '../utils/errorHandler.js';
+import Record from '../models/record.js';
+import User from '../models/user.js';
+import { DateTime } from 'luxon';
 
-export const createRecord = (req, res) => {
-  const { id, userId, categoryId, amount, date } = req.body;
-  data.records.push({
-    id,
-    userId,
-    categoryId,
-    date: date || new Date(),
-    amount,
-  });
-  res.status(201).json({
-    message: 'Record is created',
-    record: { id, userId, categoryId, date, amount },
-  });
-};
+export const createRecord = async (req, res) => {
+  try {
+    const { id, userId, categoryId, amount, currency, date } = req.query;
 
-export const getRecord = (req, res) => {
-  const record = data.records.find(
-    (record) => record.id === req.params.record_id,
-  );
-  record
-    ? res.json(record)
-    : res.status(404).json({ message: 'Record is not found' });
-};
+    const user = await User.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-export const deleteRecord = (req, res) => {
-  const index = data.records.findIndex(
-    (record) => record.id === req.params.record_id,
-  );
-  if (index !== -1) {
-    data.records.splice(index, 1);
-    res.json({ message: 'Record is deleted' });
-  } else {
-    res.status(404).json({ message: 'Record is not found' });
+    const currencyCode = currency || user.currency;
+    const shiftedDate = DateTime.now().plus({ hours: 2 }).toISO();
+
+    const newRecord = new Record({
+      id,
+      userId,
+      categoryId,
+      amount,
+      currency: currencyCode,
+      date: date || shiftedDate,
+    });
+
+    await newRecord.save();
+    res.status(201).json({
+      message: 'Record is created',
+      record: newRecord,
+    });
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
   }
 };
 
-export const getFilteredRecords = (req, res) => {
+export const getRecord = async (req, res) => {
+  try {
+    const record = await Record.findOne({ id: req.params.record_id });
+
+    if (!record) {
+      return res.status(404).json({ message: 'Record not found' });
+    }
+
+    res.json(record);
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
+};
+
+export const deleteRecord = async (req, res) => {
+  try {
+    const record = await Record.findOneAndDelete({ id: req.params.record_id });
+
+    if (!record) {
+      return res.status(404).json({ message: 'Record not found' });
+    }
+
+    res.json({ message: 'Record is deleted' });
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
+};
+
+export const getFilteredRecords = async (req, res) => {
   const { userId, categoryId } = req.query;
 
   if (!userId && !categoryId) {
@@ -46,12 +75,21 @@ export const getFilteredRecords = (req, res) => {
     });
   }
 
-  const filteredRecords = data.records.filter(
-    (record) =>
-      (!userId || record.userId === userId) &&
-      (!categoryId || record.categoryId === categoryId),
-  );
-  filteredRecords.length > 0
-    ? res.json(filteredRecords)
-    : res.status(404).json({ message: 'No records are found' });
+  try {
+    const filter = {};
+
+    if (userId) filter.userId = userId;
+    if (categoryId) filter.categoryId = categoryId;
+
+    const filteredRecords = await Record.find(filter);
+
+    if (filteredRecords.length > 0) {
+      res.json(filteredRecords);
+    } else {
+      res.status(404).json({ message: 'No records found' });
+    }
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
 };

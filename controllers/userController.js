@@ -1,28 +1,57 @@
-import { data } from '../data.js';
+import User from '../models/user.js';
+import Currency from '../models/currency.js';
+import { handleError } from '../utils/errorHandler.js';
 
-export const createUser = (req, res) => {
-  const { id, name } = req.body;
-  data.users.push({ id, name });
-  res.status(201).json({ message: 'User is created', user: { id, name } });
-};
+export const createUser = async (req, res) => {
+  try {
+    const { id, name, currency } = req.body;
 
-export const getUser = (req, res) => {
-  const user = data.users.find((user) => user.id === req.params.user_id);
-  user
-    ? res.json(user)
-    : res.status(404).json({ message: 'User is not found' });
-};
+    const defaultCurrency = await Currency.findOne({ code: currency });
+    if (!defaultCurrency) {
+      return res.status(400).json({ message: 'Currency not found' });
+    }
 
-export const deleteUser = (req, res) => {
-  const index = data.users.findIndex((user) => user.id === req.params.user_id);
-  if (index !== -1) {
-    data.users.splice(index, 1);
-    res.json({ message: 'User deleted' });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+    const user = new User({ id, name, currency: defaultCurrency.code });
+    await user.save();
+    res.status(201).json({ message: 'User is created', user });
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
   }
 };
 
-export const getAllUsers = (req, res) => {
-  res.json(data.users);
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ id: req.params.user_id });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findOneAndDelete({ id: req.params.user_id });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message: 'User deleted', user });
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    const { status, message, errors } = handleError(error);
+    res.status(status).json({ message, errors });
+  }
 };
