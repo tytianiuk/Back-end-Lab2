@@ -17,12 +17,8 @@ const recordSchema = new mongoose.Schema({
     },
   },
   userId: {
-    type: Number,
+    type: String,
     required: [true, 'The "userId" field is required.'],
-    validate: {
-      validator: validateId,
-      message: 'The "userId" field must be a non-negative integer.',
-    },
   },
   categoryId: {
     type: Number,
