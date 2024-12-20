@@ -12,4 +12,5 @@ services:
       - /app/node_modules
     environment:
       - MONGODB_URI=mongodb+srv://tytianiuk:tytianiuk@lab3.r7qna.mongodb.net/?retryWrites=true&w=majority&appName=lab3
+      - JWT_SECRET=a5d7b965e38a36184b3dadb71c77e606314326519f82032d9bf5e4da73e8b542
     restart: always
