@@ -32,3 +32,8 @@ export const validateCurrency = async (value) => {
   const currency = await mongoose.model('Currency').findOne({ code: value });
   return !!currency;
 };
+
+export const validatePassword = (password) => {
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // минимум 8 символов, хотя бы 1 буква и 1 цифра
+  return regex.test(password);
+};

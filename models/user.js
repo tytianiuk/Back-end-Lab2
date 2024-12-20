@@ -1,19 +1,17 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
-  validateId,
   validateName,
   validateCurrency,
+  validatePassword,
 } from '../utils/validation.js';
 
 const userSchema = new mongoose.Schema({
   id: {
-    type: Number,
-    required: [true, 'The "id" field is required.'],
+    type: String,
+    required: true,
     unique: true,
-    validate: {
-      validator: validateId,
-      message: 'The "id" field must be a positive integer.',
-    },
+    default: () => new mongoose.Types.ObjectId().toString(),
   },
   name: {
     type: String,
@@ -32,9 +30,22 @@ const userSchema = new mongoose.Schema({
       message: 'The "currency" field must reference a valid currency.',
     },
   },
+  password: {
+    type: String,
+    required: [true, 'The "password" field is required.'],
+    minlength: [8, 'The "password" field must be at least 8 characters long.'],
+    validate: {
+      validator: validatePassword,
+      message:
+        'The "password" field must contain at least one letter and one digit.',
+    },
+  },
 });
 
-userSchema.pre('save', function (next) {
+userSchema.pre('save', async function (next) {
+  if (this.password) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
   if (this.name) {
     this.name = this.name.trim();
   }
