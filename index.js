@@ -5,6 +5,7 @@ import recordRoutes from './routes/recordRoutes.js';
 import currencyRoutes from './routes/currencyRoutes.js';
 import { getAllUsers } from './controllers/userController.js';
 import connectDatabase from './utils/db.js';
+import authenticate from './middlewares/authenticate.js';
 
 const server = express();
 const PORT = 3000;
@@ -13,7 +14,7 @@ connectDatabase();
 
 server.use(express.json());
 
-server.use('/user', userRoutes).get('/users', getAllUsers);
+server.use('/user', userRoutes).get('/users', authenticate, getAllUsers);
 server.use('/category', categoryRoutes);
 server.use('/record', recordRoutes);
 server.use('/currency', currencyRoutes);
