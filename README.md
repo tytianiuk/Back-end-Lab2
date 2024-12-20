@@ -1,6 +1,6 @@
-# Back-end-Lab3
+# Back-end-Lab4
 
-Робив 3-ю лабораторну роботу у репозиторії 2-ї лабораторної.
+Робив 4-ю лабораторну роботу у репозиторії 2-ї лабораторної, але в окремій гілці.
 
 ## Визначення варіанту
 
@@ -37,7 +37,7 @@ docker-compose up --build
 
 Використовуйте колекцію, підкріплену разом з роботою, для тестування.
 
-Використовуйте flow - [посилання](https://www.postman.com/tytianiuk/workspace/my-workspace/flow/67629b7b4b10e4003241d515) - для тестування.
+Використовуйте flow - [посилання](https://www.postman.com/tytianiuk/workspace/31f32184-204f-4cd6-848a-46e8279fe4a0/flow/67654719f8fc495e8b135ea6) - для тестування.
 
 ### 4. Зупинка Docker:
 
@@ -47,4 +47,4 @@ docker-compose down
 
 ## Доступний деплой на сервісі render.com:
 
-[_https://back-end-lab-2-c42m.onrender.com/_](https://back-end-lab-2-c42m.onrender.com/)
+[_https://back-end-lab4-un0i.onrender.com/_](https://back-end-lab4-un0i.onrender.com/)
